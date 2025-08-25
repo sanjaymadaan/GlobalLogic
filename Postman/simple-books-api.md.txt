@@ -1,0 +1,247 @@
+Simple Books API
+
+This API allows you to reserve a book.
+
+The API is available at   https://simple-books-api.glitch.me
+
+Endpoints
+
+Status  :  GET   /status
+Returns the status of the API.
+
+List of books :  GET   /books
+Returns a list of books.
+Optional query parameters:
+- type: fiction or non-fiction
+- limit: a number between 1 and 20.
+
+
+Get a single book  :  GET   /books/:bookId
+Retrieve detailed information about a book.
+ 
+Submit an order  : POST   /orders
+Allows you to submit a new order. Requires authentication.
+The request body needs to be in JSON format and include the following properties:
+ -   bookId   - Integer - Required
+ -   customerName   - String - Required
+
+Example
+POST /orders/
+Authorization: Bearer <YOUR TOKEN>
+{
+  "bookId": 1,
+  "customerName": "John"
+}
+      
+
+The response body will contain the order Id.  
+Response Body::
+{
+    "created": true,
+    "orderId": "1ojXGef8Fi45qYFo_wLOB"
+}
+
+Get all orders :  GET   /orders  
+Allows you to view all orders. Requires authentication.
+{
+  "bookId": 1,
+  "customerName": "John"
+}
+
+Get an order  :  GET   /orders/:orderId
+Allows you to view an existing order. Requires authentication.
+
+Update an order : PATCH   /orders/:orderId  
+Update an existing order. Requires authentication.
+The request body needs to be in JSON format and allows you to update the following properties:
+ -   customerName   - String
+
+ Example
+      
+PATCH /orders/PF6MflPDcuhWobZcgmJy5
+Authorization: Bearer <YOUR TOKEN>
+{
+  "customerName": "John"
+}
+      
+
+Delete an order  :  DELETE   /orders/:orderId  
+Delete an existing order. Requires authentication.
+The request body needs to be empty.
+ Example:
+DELETE /orders/<PF6MflPDcuhWobZcgmJy5>
+Authorization: Bearer <YOUR TOKEN>
+      
+
+## API Authentication ##
+
+To submit or view an order, you need to register your API client.
+POST   /api-clients/  
+The request body needs to be in JSON format and include the following properties:
+ -   clientName   - String
+ -   clientEmail   - String
+
+ Example
+ {
+    "clientName": "Postman",
+    "clientEmail": "valentin@example.com"
+}
+       
+
+The response body will contain the access token. The access token is valid for 7 days.
+
+**Possible errors**
+
+Status code 409 - "API client already registered." Try changing the values for   clientEmail   and   clientName   to something else.
+                      
+
+Test
+
+Get Status
+	1. pm.test("Status code is 200", function () {
+   	   pm.response.to.have.status(200);
+	   });	
+	2. Fail test 1 by sending the updated request
+	3. //java script variable
+	   const response = pm.response.json();
+	   console.log(response);
+	   console.log(response.status);
+	   console.log(response['status']);
+	4. //user defined test cases
+           pm.test("status should be ok",()=>{
+           pm.expect(1).to.eql(2);
+           });
+
+           pm.test("status should be ok",()=>{
+           pm.expect(response.status).to.eql("OK");
+           });
+
+
+Get Books
+	5. pm.test("status should be 200",()=>{
+	   pm.response.to.have.status("OK");
+	   });
+
+Get a Book
+	6. pm.test("status should be 200",()=>{
+	   pm.response.to.have.status("OK");
+	   });
+API Auth
+	6.1. pm.test("status should be 201",()=>{
+	   pm.response.to.have.status("Created");
+	   });
+Submit a Order
+	7.0. pm.test("status should be 200",()=>{
+	   pm.response.to.have.status("OK");
+	   });
+
+	7. pm.test("status should be 201",()=>{
+	   pm.response.to.have.status("Created");
+	   });
+
+	8. If need to add the global variable
+	   const response = pm.response.json();
+	   pm.globals.set("orderId", response.orderId);
+
+
+Get All Orders
+	9. pm.test("status should be 200",()=>{
+	   pm.response.to.have.status("OK");
+	   });
+
+Get an Order
+	10. pm.test("status should be 200",()=>{
+	   pm.response.to.have.status("OK");
+	   });
+
+Delete an Order
+	11. pm.test("status should be 204",()=>{
+	   pm.response.to.have.status("No Content");
+	   });
+
+Update an Order
+	12. pm.test("status should be 204",()=>{
+	   pm.response.to.have.status("No Content");
+	   });
+
+                  
+
+Extracting data from the response::
+Get Books
+	13. const response = pm.response.json();
+
+		const nonFictionBooks = response.filter((book) => book.available === true);
+	
+		//console.log(response[0].id);
+		console.log(nonFictionBooks);
+	
+		//pm.globals.set("bookId", nonFictionBooks[0].id);
+	
+		const book = nonFictionBooks[0];
+		pm.test("Book Found",()=>{
+		    pm.expect(book).to.be.an('object');
+		    pm.expect(book.available).to.be.true;
+		    pm.expect(book.available).to.eql(true);
+	
+		});
+	
+		pm.globals.set("bookId", book.id);
+	
+	
+		pm.test("Non Fiction Book Found",()=>{
+		    pm.expect(book).to.be.an('object');
+		    pm.expect(book.available).to.be.true;
+		    pm.expect(book.available).to.eql(true);
+
+		    pm.expect(book.type).to.be.eql("non-fiction");
+
+		});
+
+
+Get a Book
+	14.     pm.test("Is in stock",()=>{
+	           pm.expect(1).to.be.above(2);
+           	});
+
+	15.     const response = pm.response.json();
+		pm.test("Is In Stock", ()=> {
+		    pm.expect(response['current-stock']).to.be.above(0);
+		
+		});
+
+
+                  
+Collection Runner after all test cases
+
+                  
+Submit a Order
+		set the global variable
+	16. 	const response = pm.response.json();
+		pm.globals.set("orderId", response.orderId);
+
+Get Status
+	17. postman.setNextRequest("Get a Book");
+
+paste to the last request page
+	18. postman.setNextRequest(null);
+
+	loop
+	19. postman.setNextRequest("Get a Book");
+
+Monitor the Collection
+Official Document::  https://learning.postman.com/docs/introduction/overview/
+
+------------------
+JSON PlaceHolder
+https://jsonplaceholder.typicode.com
+https://www.guru99.com/postman-tutorial.html
+------------------
+Simple Grocery Store API
+https://github.com/vdespa/Postman-Complete-Guide-API-Testing/blob/main/simple-grocery-store-api.md#Add-an-item-to-cart
+------------------
+Simple Tools Rental API documentation
+https://github.com/vdespa/quick-introduction-to-postman
+------------------
+
+https://developer.spotify.com/documentation/web-api/howtos/web-app-profile
+https://rapidapi.com/api-sports/api/api-football/
