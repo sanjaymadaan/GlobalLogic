@@ -19,7 +19,5 @@ spring.datasource.password=
 spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 spring.h2.console.enabled=true
 
-
-# Show SQL in logs (optional)
 spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update
