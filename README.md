@@ -9,15 +9,16 @@ Important Links:
 
 
 
+<ul>
+<li>server.port=8080</li>
 
-server.port=8080
+<li>spring.datasource.url=jdbc:h2:mem:testdb</li>
+<li>spring.datasource.driverClassName=org.h2.Driver</li>
+<li>spring.datasource.username=sa</li>
+<li>spring.datasource.password=</li>
+<li>spring.jpa.database-platform=org.hibernate.dialect.H2Dialect</li>
+<li>spring.h2.console.enabled=true</li>
 
-spring.datasource.url=jdbc:h2:mem:testdb
-spring.datasource.driverClassName=org.h2.Driver
-spring.datasource.username=sa
-spring.datasource.password=
-spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-spring.h2.console.enabled=true
-
-spring.jpa.show-sql=true
-spring.jpa.hibernate.ddl-auto=update
+<li>spring.jpa.show-sql=true</li>
+<li>spring.jpa.hibernate.ddl-auto=update</li>
+</ul>
